@@ -7,12 +7,16 @@
 #define RGB_BLUE_PIN 10
 #define RGB_GREEN_PIN 9
 
+
 int MIC = 0; //mic pin
 int VALOR;   //Mic input value?
 int dTime = 80; //delay time value 
 
 int Sensor_pin = A0 ; // Reed card pin
 int Magnet = 0 ; // Magnet defult value
+
+int buttonPin = 2; // Button pin
+int mode = 0;
 
 void digitalWriteRGB(byte red, byte blue, byte green)
 {
@@ -36,20 +40,46 @@ void setup()
   pinMode(Sensor_pin, INPUT) ; 
 
   //digitalWrite(RGB_RED_PIN, LOW); //I don't remember why tf we had this line.
+
+  pinMode(buttonPin, INPUT);
 }
 
 void loop()
 {  
-  
-
   VALOR = digitalRead(MIC);
   Magnet = digitalRead(Sensor_pin);
 
+  int buttonState = digitalRead(buttonPin);
+  
+  if(buttonState == HIGH){
+  Serial.write(buttonState);
+  mode++;
+  if(mode == 7){
+    mode = 0;
+  }
+  buttonState = LOW;
+  }
+
   int potentiometerValue = analogRead(POTENTIOMETER_PIN);
-  int mode = map(potentiometerValue, 0, 1023, 0, 6);
+  //int mode = map(potentiometerValue, 0, 1023, 0, 6);
 
   if(VALOR == HIGH && Magnet)
   {
+  /*  if(buttonState == HIGH)
+  {
+    
+    if(mode >= 6)
+    {
+      mode = 0;
+    }
+  }
+  else
+  {
+    mode++;
+    buttonState = LOW;
+  } */
+
+
     if (mode== 0){
         digitalWriteRGB(HIGH,LOW,LOW);
         delay(dTime);
